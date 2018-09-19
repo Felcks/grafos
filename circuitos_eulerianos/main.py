@@ -82,21 +82,38 @@ def grafo_valido(Graph):
 
 print(grafo_valido(G))
 
+def quantidade_vertices(Graph):
 
+    tam = 0
+    for key, values in Graph.data.iteritems():
+        tam += len(values)
+
+    return tam/2
+
+
+tam_grafo = quantidade_vertices(G)
+print(tam_grafo)
 lista = []
 def rodar_grafo(k1, Graph):
 
+    achou = False
     for x in Graph.data[k1]:
         
         if(lista.count(x+k1) == 0 and lista.count(k1+x) == 0):
             lista.append(k1+x)
-            print(k1+x)
+            achou = True
             rodar_grafo(x, Graph)
 
-        
-        #f(lista.count(x+k1))
+
+    if(achou == False):
+        #conferir se acabou
+        if(len(lista) == tam_grafo):
+            print("acabou")
+        else:
+            lista.pop()
 
 rodar_grafo(entrada.rstrip(' \n'), G)
+print(lista)
 
 
 
