@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 #!/usa/bin/python3.4
 
+#IMPLEMENTAR O ALGORITMO DE TARJAN PARA IDENTIFICAR PONTES EM UM GRAFO
+#SEU ALGORITMO DEVE INFORMAR ARESTAS DO TIPO PONTE
+
 import os
 import sys
 
@@ -70,66 +73,47 @@ f = sys.stdin
 entrada = f.readline()
 G.read()
 
+lista = [] #chaves
+lista_v = [] #chaves adicionadas
+distancia_i = {} #distancias iniciais
+distancia_f = {} #distancias finais
 
-##lado igual a true ou false
-lista = []
-lista2 = []
+def profundidade(k1, d, Graph):
 
-lista.append(entrada.rstrip(' \n'))
-lista2.append(True)
+	lista.append(k1)
+	distancia_i[k1] = d
+	achou = False
 
-def largura(Graph):
+	for x in Graph.data[k1]:
+		
+		if lista.count(x) >= 1:
+			#distancias_i
+			pass
+		# elif x == k2:
+		# 	lista.append(k2)
+		# 	return True
+		else:
+			if(achou == True):
+				d = profundidade(x,d, Graph) #6
+			else:
+				d = profundidade(x,d+1, Graph)
+			achou = True
+	
+	distancia_f[k1] = d
 
-    index = 0;
-    profundidade = True;
-    while(index < len(lista)):
+	if(achou == False):
+		d = d+1
+		distancia_f[k1] = d
 
-        if(index > 0):
-            if(lista2[index] != lista2[index-1]):
-                profundidade = not profundidade
-        elif(index == 0):
-                profundidade = not profundidade
-
-        k1 = lista[index]
-        for x in Graph.data[k1]:
-            
-            if lista.count(x) >= 1:
-
-                for i in range(0, len(lista)):
-                    if(lista[i] == x):
-                        if(lista2[i] != profundidade):
-                            print("Esse grafo nao serve!")
-                            return False
-                #aqui eu tenho que conferir se ele existe na lista
-                #se existir tenho que ver se a profundidade que eu vou dar pra ele vai ser igual a que ele tem de fato
-                pass
-            else:
-                lista.append(x)
-                lista2.append(profundidade)
-                        
-
-        index += 1
-
-    return True
+	#lista.pop()
+	return d+1
 
 
-#Removendo o A e a distancia para A
-#lista.pop(0)
-#lista2.pop(0)
+p = profundidade(entrada.rstrip(' \n'), 1, G)
+for key in G.data:
+	if(key not in lista):
+		p = profundidade(key, p, G)
 
-if(largura(G)):
-    data = {}
-    i = 0
-    while(i < len(lista)):
-        data[lista[i]] = lista2[i]
-        i += 1
 
-    ordenado = data.keys()
-    ordenado.sort()
-
-    s = ""
-    for x in ordenado:
-        s += x + " " + str(data[x])
-        print(s)
-        s = ""
-
+print(distancia_i)
+print(distancia_f)
