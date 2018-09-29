@@ -66,57 +66,41 @@ G = Graph()
 ### Carga via entrada de dados (arquivo ou entrada padrão) ###
 f = sys.stdin
 entrada = f.readline()
+inicio = entrada.rstrip(' \n')
 G.read()
 
-lista = []
-lista2 = []
+def BuscaProfundidade(G):
+    cor = {}
+    pai = {}
+    d = {}
+    f = {}
+    lista = []
 
-lista.append(entrada.rstrip(' \n'))
-lista2.append(0)
+    for key, values in G.iteritems():
+        cor[key] = 'BRANCO'
+        pai = None
 
-def caminhoMinimo(Graph):
-
-    index = 0;
-    profundidade = 1;
-    while(index < len(lista)):
-
-        if(index > 0):
-            if(lista2[index] != lista2[index-1]):
-                profundidade += 1
-
-        k1 = lista[index]
-        for x in Graph.data[k1]:
-            
-            if lista.count(x) >= 1:
-                pass
-            else:
-                lista.append(x)
-                lista2.append(profundidade)
-                        
-
-        index += 1
+    tempo = 0
+    for key, values in G.iteritems():
+        if(cor[key] == 'BRANCO'):
+            tempo = Visita(G, key, tempo, cor, d, f, lista)
+    
+    print(lista)
 
 
+def Visita(G, u, tempo, cor, d, f, lista):
+    cor[u] = 'CINZA'
+    tempo = tempo + 1
+    d[u] = tempo
+    for v in G[u]:
+        if(cor[v] == 'BRANCO'):
+            tempo = Visita(G, v, tempo, cor, d, f, lista)
 
-    return False
+    cor[u] = 'PRETO'
+    tempo = tempo + 1
+    f[u] = tempo
+    lista.insert(0, u)
+    return tempo
 
-caminhoMinimo(G)
 
-#Removendo o A e a distancia para A
-lista.pop(0)
-lista2.pop(0)
-
-data = {}
-i = 0
-while(i < len(lista)):
-    data[lista[i]] = lista2[i]
-    i += 1
-
-ordenado = data.keys()
-ordenado.sort()
-
-s = ""
-for x in ordenado:
-    s += entrada.rstrip(' \n') + " " + x + " " + str(data[x])
-    print(s)
-    s = ""
+BuscaProfundidade(G.data)

@@ -66,57 +66,37 @@ G = Graph()
 ### Carga via entrada de dados (arquivo ou entrada padrão) ###
 f = sys.stdin
 entrada = f.readline()
+inicio = entrada.rstrip(' \n')
 G.read()
+   
 
-lista = []
-lista2 = []
-
-lista.append(entrada.rstrip(' \n'))
-lista2.append(0)
-
-def caminhoMinimo(Graph):
-
-    index = 0;
-    profundidade = 1;
-    while(index < len(lista)):
-
-        if(index > 0):
-            if(lista2[index] != lista2[index-1]):
-                profundidade += 1
-
-        k1 = lista[index]
-        for x in Graph.data[k1]:
-            
-            if lista.count(x) >= 1:
-                pass
-            else:
-                lista.append(x)
-                lista2.append(profundidade)
-                        
-
-        index += 1
+def BuscaLargura(G, s):
+    cor = {}
+    d = {}
+    pai = {}
+    for key, value in G.iteritems():
+        cor[key] = 'BRANCO'
+        d[key] = 999
+        pai[key] = None
 
 
+    cor[s] = 'CINZA'
+    d[s] = 0
+    fila = [s]
 
-    return False
+    while(len(fila) > 0):
+        u = fila.pop(0)
+        for v in G[u]:
+            if(cor[v] == 'BRANCO'):
+                cor[v] = 'CINZA'
+                d[v] = d[u] + 1
+                pai[v] = u
+                fila.append(v)
+        cor[u] = 'PRETO'
 
-caminhoMinimo(G)
+    
+    return d
 
-#Removendo o A e a distancia para A
-lista.pop(0)
-lista2.pop(0)
 
-data = {}
-i = 0
-while(i < len(lista)):
-    data[lista[i]] = lista2[i]
-    i += 1
-
-ordenado = data.keys()
-ordenado.sort()
-
-s = ""
-for x in ordenado:
-    s += entrada.rstrip(' \n') + " " + x + " " + str(data[x])
-    print(s)
-    s = ""
+distancias = BuscaLargura(G.data, inicio)
+print(distancias)
