@@ -1,0 +1,16 @@
+S
+S A 16 C 13 
+A B 12 C 10
+B C 9 T 20
+C A 4 D 14
+D B 7 T 4
+T
+
+S
+S A 16 C 13 
+A B 12 C 10 S 0
+B C 9 T 20 D 0
+C A 4 D 14 S 0 B 0
+D B 7 T 4 C 0
+T B 0 D 0
+T

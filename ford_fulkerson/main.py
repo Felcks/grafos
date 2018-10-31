@@ -37,7 +37,6 @@ class Graph:
             		di[v] = a
             		i = 0
 
-
             data[u] = di #neighbours
         
         self.data = data    
@@ -85,31 +84,98 @@ G.read()
 lista_vertice_tempo_pai = []
 #print(G.data)
 
+lista_vertice_tempo_pai = []
+
 def BuscaProfundidade(G, u):
+	
+	fluxos = {}
+	for key, values in G.items():
+
+		dict_elemento_fluxo = {}
+		for k, v in values.items():
+			dict_elemento_fluxo[k] = 0
+
+		fluxos[key] = dict_elemento_fluxo
+
+	print(fluxos)
+	print(G)
+
+
 	cor = {}
 	pai = {}
-	tempos = {}
 	lista = []
+	#tempos = gargalo
 
 	for key, values in G.items():
 		cor[key] = 'BRANCO'
 		pai[key] = None
 
-	tempo = 0
-	Visita(G, u, tempo, cor, tempos, lista)
+	gargalo = 999
+	GeraCaminho(G, u, gargalo, cor, lista)
 
-	print(tempos)
-	print(lista_vertice_tempo_pai)
-	#Visita(G, u, tempo, cor)
+	#print(tempos)
+	#print(lista_vertice_tempo_pai)
 
-	
-		#print()
-		#for k, v in values.iteritems():
-		#	print(v)
-	    #   tempo = Visita(G, key, tempo, cor, d, f, lista)
+def GeraCaminho(G, u, gargalo, cores, caminho):
 
-	#print(lista)
+	cores[u[0]] = 'PRETO'
+	lista_vizinhos = []
 
+	for i in G[u[0]].items():
+		if(cores[i[0]] == 'BRANCO'):
+			achou = False
+			for l in caminho:
+				if(l[0] == i[0]):
+					if(i[1] > l[1]):
+						lista.remove(l)
+					else:
+						achou = True
+
+			if(achou == False):
+
+				elemento_vertice_gargalo_pai = []
+				elemento_vertice_gargalo_pai.append(i[0])
+				elemento_vertice_gargalo_pai.append(str(int(i[1])))
+				elemento_vertice_gargalo_pai.append(u[0])
+				print("elemento vertice gargalo pai", elemento_vertice_gargalo_pai)
+				heappush(lista_vizinhos, elemento_vertice_gargalo_pai)
+
+	print("lista vizinhos", lista_vizinhos)
+
+	if len(lista_vizinhos) > 0:
+		
+		maiorEspaco = 0		
+		possivel_u = u
+		pai = u
+		for l in lista_vizinhos:
+
+			if(int(l[1]) > maiorEspaco):
+				maiorEspaco = int(l[1])
+				possivel_u = l[0]
+				print("maior espaco", maiorEspaco, l[0])
+				pai = l[2]
+
+
+		u = possivel_u
+		if(maiorEspaco < gargalo):
+			gargalo = maiorEspaco
+
+		elemento_vertice_gargalo_pai = []
+		elemento_vertice_gargalo_pai.append(u)
+		elemento_vertice_gargalo_pai.append(gargalo)
+		elemento_vertice_gargalo_pai.append(pai)
+		heappush(caminho, elemento_vertice_gargalo_pai)
+		print("oi", elemento_vertice_gargalo_pai)
+
+		if(u != )
+		GeraCaminho()
+		# for l in lista:
+		# 	if(l[0] == possivel_u):
+		# 		lista.remove(l)
+		# 		break
+
+		# #print("escolha", u)
+		# Visita(G, u, tempoMinimo, cor, tempos, lista)
 
 def Visita(G, u, tempo, cor, tempos, lista):
     
@@ -122,7 +188,7 @@ def Visita(G, u, tempo, cor, tempos, lista):
 			for l in lista:
 				if(l[0] == i[0]):
 					print("acontece", l[0], l[1], i[0], i[1])
-					if(i[1] < l[1]):
+					if(i[1] > l[1]):
 						lista.remove(l)
 					else:
 						achou = True
@@ -131,9 +197,13 @@ def Visita(G, u, tempo, cor, tempos, lista):
 				#print(i)
 				elemento_vertice_tempo_pai = []
 				elemento_vertice_tempo_pai.append(i[0])
-				elemento_vertice_tempo_pai.append(str(int(i[1]) + tempo))
+				gargalo = tempo
+				if int(i[1]) < tempo:
+					gargalo = int(i[1])
+
+				elemento_vertice_tempo_pai.append(str(gargalo))
 				elemento_vertice_tempo_pai.append(u[0])
-				print("elemento vertice tempo pai", elemento_vertice_tempo_pai)
+				print("elemento vertice gargalo pai", elemento_vertice_tempo_pai)
 				heappush(lista, elemento_vertice_tempo_pai)
 
 	#print("lista2", lista)
@@ -189,4 +259,4 @@ def Visita(G, u, tempo, cor, tempos, lista):
 	# f[u] = tempo
 	# lista.insert(0, u)
 
-BuscaProfundidade(G.data, 'A')
+BuscaProfundidade(G.data, inicio)
