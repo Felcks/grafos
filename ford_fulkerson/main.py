@@ -110,13 +110,91 @@ def BuscaProfundidade(G, u):
 		cor[key] = 'BRANCO'
 		pai[key] = None
 
+
+	
+	# gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+	# AumentaFluxo(G, fluxos, lista, gargalo)
+
+	# lista = []
+	# for key, values in G.items():
+	# 	cor[key] = 'BRANCO'
+	# gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+	# AumentaFluxo(G, fluxos, lista, gargalo)
+
+	# lista = []
+	# for key, values in G.items():
+	# 	cor[key] = 'BRANCO'
+	# gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+	# AumentaFluxo(G, fluxos, lista, gargalo)
+
+	# lista = []
+	# for key, values in G.items():
+	# 	cor[key] = 'BRANCO'
+	# gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+	# if gargalo != 999:
+	# 	AumentaFluxo(G, fluxos, lista, gargalo)
+
+
 	gargalo = 999
-	GeraCaminho(G, u, gargalo, cor, lista)
+	while(True):
+		lista = []
+		for key, values in G.items():
+			cor[key] = 'BRANCO'
+		
+		gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+		if gargalo != 999:
+			AumentaFluxo(G, fluxos, lista, gargalo)
+		else:
+			break
+
+
+	print(G)
+	print(fluxos)
+
+	#while(true):
+	#	gargalo = 999
+
 
 	#print(tempos)
 	#print(lista_vertice_tempo_pai)
 
+def AumentaFluxo(G, fluxos, caminho, gargalo):
+	
+	print("gargalo no final", gargalo)
+	print("caminho na funcao", caminho)
+	for c in caminho:
+		pai = c[2]
+		filho = c[0]
+
+		#Diminuindo o total
+		arestas_do_pai = G[pai]
+		valor_aresta_pai_filho = arestas_do_pai[filho]
+
+		valor_aresta_pai_filho = str(int(valor_aresta_pai_filho) - gargalo)
+		G[pai][filho] = valor_aresta_pai_filho
+
+		#Aumentando o fluxo
+		arestas_do_filho = G[filho]
+		print(filho)
+		valor_aresta_filho_pai = arestas_do_filho[pai]
+
+		valor_aresta_filho_pai = str(int(valor_aresta_filho_pai) + gargalo)
+		fluxos[filho][pai] = valor_aresta_filho_pai
+
+
+	print(G)
+	print(fluxos)
+
+
+		#G[c[3]] = G[c[3]] - gargalo
+		#print(G[c[2]][c[0]])
+		#print(c[2])
+
+
 def GeraCaminho(G, u, gargalo, cores, caminho):
+
+	#for key, values in G.items():
+	#	cores[key] = 'BRANCO'
 
 	cores[u[0]] = 'PRETO'
 	lista_vizinhos = []
@@ -127,7 +205,7 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 			for l in caminho:
 				if(l[0] == i[0]):
 					if(i[1] > l[1]):
-						lista.remove(l)
+						lista_vizinhos.remove(l)
 					else:
 						achou = True
 
@@ -147,13 +225,24 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 		maiorEspaco = 0		
 		possivel_u = u
 		pai = u
+		achou_espaco_vazio = False
+
 		for l in lista_vizinhos:
 
+			# ISSO DAQUI DA PREFERENCIA PARA
+			# if(l[0] == 'T'):
+			# 	maiorEspaco = int(l[1])
+			# 	possivel_u = l[0]
+			# 	pai = l[2]
+			# 	break
 			if(int(l[1]) > maiorEspaco):
 				maiorEspaco = int(l[1])
 				possivel_u = l[0]
-				print("maior espaco", maiorEspaco, l[0])
 				pai = l[2]
+				achou_espaco_vazio = True
+
+		if achou_espaco_vazio == False:
+			return 999
 
 
 		u = possivel_u
@@ -166,9 +255,14 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 		elemento_vertice_gargalo_pai.append(pai)
 		heappush(caminho, elemento_vertice_gargalo_pai)
 		print("oi", elemento_vertice_gargalo_pai)
+		print("caminho", caminho)
+		
+		#print("u", u)
+		if(u != 'T'):
+			gargalo = GeraCaminho(G, u, gargalo, cores, caminho)
+		
+		return gargalo
 
-		if(u != )
-		GeraCaminho()
 		# for l in lista:
 		# 	if(l[0] == possivel_u):
 		# 		lista.remove(l)
