@@ -141,15 +141,18 @@ def BuscaProfundidade(G, u):
 		for key, values in G.items():
 			cor[key] = 'BRANCO'
 		
-		gargalo = GeraCaminho(G, u, gargalo, cor, lista)
+		gargalo = GeraCaminho(G, u, gargalo, cor, lista, fluxos)
 		if gargalo != 999:
 			AumentaFluxo(G, fluxos, lista, gargalo)
 		else:
 			break
 
+		#break
 
-	print(G)
-	print(fluxos)
+	
+
+	#print(G)
+	#print(fluxos)
 
 	#while(true):
 	#	gargalo = 999
@@ -167,23 +170,23 @@ def AumentaFluxo(G, fluxos, caminho, gargalo):
 		filho = c[0]
 
 		#Diminuindo o total
-		arestas_do_pai = G[pai]
-		valor_aresta_pai_filho = arestas_do_pai[filho]
+		# arestas_do_pai = G[pai]
+		# valor_aresta_pai_filho = arestas_do_pai[filho]
 
-		valor_aresta_pai_filho = str(int(valor_aresta_pai_filho) - gargalo)
-		G[pai][filho] = valor_aresta_pai_filho
+		# valor_aresta_pai_filho = str(int(valor_aresta_pai_filho) - gargalo)
+		fluxos[pai][filho] += gargalo
 
 		#Aumentando o fluxo
-		arestas_do_filho = G[filho]
-		print(filho)
-		valor_aresta_filho_pai = arestas_do_filho[pai]
+		# arestas_do_filho = G[filho]
+		# print(filho)
+		# valor_aresta_filho_pai = arestas_do_filho[pai]
 
-		valor_aresta_filho_pai = str(int(valor_aresta_filho_pai) + gargalo)
-		fluxos[filho][pai] = valor_aresta_filho_pai
+		# valor_aresta_filho_pai = str(int(valor_aresta_filho_pai) - gargalo)
+		fluxos[filho][pai] -= gargalo
 
 
-	print(G)
-	print(fluxos)
+	#print(G)
+	print("fluxos", fluxos)
 
 
 		#G[c[3]] = G[c[3]] - gargalo
@@ -191,7 +194,7 @@ def AumentaFluxo(G, fluxos, caminho, gargalo):
 		#print(c[2])
 
 
-def GeraCaminho(G, u, gargalo, cores, caminho):
+def GeraCaminho(G, u, gargalo, cores, caminho, fluxos):
 
 	#for key, values in G.items():
 	#	cores[key] = 'BRANCO'
@@ -213,7 +216,16 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 
 				elemento_vertice_gargalo_pai = []
 				elemento_vertice_gargalo_pai.append(i[0])
-				elemento_vertice_gargalo_pai.append(str(int(i[1])))
+				print("fluxo contrario", fluxos[u[0]][i[0]])
+				capacidade_maxima = int(i[1])
+				fluxo_atual = fluxos[i[0]][u[0]]
+				capacidade_real = capacidade_maxima - fluxo_atual
+				if capacidade_real > capacidade_maxima:
+					capacidade_real = capacidade_maxima
+
+				print("CAPACIDADADE DO VERTICE REAL", capacidade_real)
+				#elemento_vertice_gargalo_pai.append(str(int(i[1])))
+				elemento_vertice_gargalo_pai.append(str(capacidade_real))
 				elemento_vertice_gargalo_pai.append(u[0])
 				print("elemento vertice gargalo pai", elemento_vertice_gargalo_pai)
 				heappush(lista_vizinhos, elemento_vertice_gargalo_pai)
@@ -227,6 +239,7 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 		pai = u
 		achou_espaco_vazio = False
 
+		print("@@@ ESTOU RODANDO A LSITA DE VIZINHOS!")
 		for l in lista_vizinhos:
 
 			# ISSO DAQUI DA PREFERENCIA PARA
@@ -235,6 +248,7 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 			# 	possivel_u = l[0]
 			# 	pai = l[2]
 			# 	break
+
 			if(int(l[1]) > maiorEspaco):
 				maiorEspaco = int(l[1])
 				possivel_u = l[0]
@@ -259,7 +273,7 @@ def GeraCaminho(G, u, gargalo, cores, caminho):
 		
 		#print("u", u)
 		if(u != 'T'):
-			gargalo = GeraCaminho(G, u, gargalo, cores, caminho)
+			gargalo = GeraCaminho(G, u, gargalo, cores, caminho, fluxos)
 		
 		return gargalo
 
